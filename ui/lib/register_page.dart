@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
-  TextEditingController _otpController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
   bool _isOtpSent = false;
 
   // Function to simulate sending OTP
@@ -27,7 +29,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter your email')),
+        const SnackBar(content: Text('Please enter your email')),
       );
     }
   }
@@ -37,30 +39,57 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate()) {
       if (_otpController.text == "123456") {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registration Successful')),
+          const SnackBar(content: Text('Registration Successful')),
         );
         // Proceed with registration logic
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Invalid OTP')),
+          const SnackBar(content: Text('Invalid OTP')),
         );
       }
     }
   }
 
+  InputDecoration _materialTextFieldDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(
+        color: Colors.blueAccent,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: const BorderSide(color: Colors.blueAccent),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: const BorderSide(color: Colors.redAccent, width: 2),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: const BorderSide(color: Colors.redAccent, width: 2),
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register')),
+      appBar: AppBar(title: const Text('Register')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
             children: <Widget>[
+              // Name Field
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: 'Name'),
+                decoration: _materialTextFieldDecoration('Name'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter your name';
@@ -68,10 +97,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+
+              // Email Field
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: _materialTextFieldDecoration('Email'),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -80,10 +111,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+
+              // Password Field
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: _materialTextFieldDecoration('Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -92,10 +125,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+
+              // Confirm Password Field
               TextFormField(
                 controller: _confirmPasswordController,
-                decoration: InputDecoration(labelText: 'Confirm Password'),
+                decoration: _materialTextFieldDecoration('Confirm Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value != _passwordController.text) {
@@ -104,16 +139,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
+
+              // Send OTP Button
               ElevatedButton(
                 onPressed: _sendOtp,
-                child: Text('Send OTP'),
+                child: const Text('Send OTP'),
               ),
               if (_isOtpSent) ...[
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
+
+                // OTP Field
                 TextFormField(
                   controller: _otpController,
-                  decoration: InputDecoration(labelText: 'OTP'),
+                  decoration: _materialTextFieldDecoration('OTP'),
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   maxLength: 6,
@@ -124,11 +163,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
               ],
+
+              // Register Button
               ElevatedButton(
                 onPressed: _register,
-                child: Text('Register'),
+                child: const Text('Register'),
               ),
             ],
           ),
